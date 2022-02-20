@@ -7,15 +7,22 @@ export class Order {
     this.items.push(item);
   }
   get totalPence(): number {
-    return this.items.length * singleBookPriceInPence * (1 - this.discount);
+    return (
+      this.numberOfDistinctItems *
+        singleBookPriceInPence *
+        (1 - this.discount) +
+      (this.items.length - this.numberOfDistinctItems) * singleBookPriceInPence
+    );
+  }
+
+  private get numberOfDistinctItems(): number {
+    return this.items
+      .map((item) => item.sku)
+      .filter((item, i, self) => self.indexOf(item) === i).length;
   }
 
   private get discount(): number {
-    const distinctItems = this.items
-      .map((item) => item.sku)
-      .filter((item, i, self) => self.indexOf(item) === i);
-
-    switch (distinctItems.length) {
+    switch (this.numberOfDistinctItems) {
       case 2:
         return 0.05;
       case 3:

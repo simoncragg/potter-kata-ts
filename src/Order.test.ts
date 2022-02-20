@@ -57,4 +57,28 @@ describe("Order", () => {
     order.addItem({ sku: "5" });
     expect(order.totalPence).toBe(5 * singleBookPriceInPence * 0.75);
   });
+
+  it.each([
+    [5, 2],
+    [10, 3],
+    [20, 4],
+    [25, 5],
+  ])(
+    `should apply a %p\% discount for the %p different skus and use the standard price for each remaining duplicate sku`,
+    (discount: number, numOfUniqueSkus: number) => {
+      for (let i = 1; i <= numOfUniqueSkus; i++) {
+        order.addItem({ sku: `${i}` });
+      }
+
+      order.addItem({ sku: "2" });
+      order.addItem({ sku: "2" });
+
+      const percentage = 1 - discount / 100;
+
+      expect(order.totalPence).toBe(
+        numOfUniqueSkus * singleBookPriceInPence * percentage +
+          2 * singleBookPriceInPence
+      );
+    }
+  );
 });
