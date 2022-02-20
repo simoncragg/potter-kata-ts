@@ -1,12 +1,12 @@
 import { singleBookPriceInPence } from "./Constants";
 
 export class Order {
-  private item: Item | null = null;
+  private items = Array<Item>();
 
   addItem(item: Item) {
-    this.item = item;
+    this.items.push(item);
   }
   get totalPence(): number {
-    return this.item ? singleBookPriceInPence : 0;
+    return this.items.length * singleBookPriceInPence;
   }
 }

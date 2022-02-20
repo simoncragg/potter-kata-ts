@@ -12,8 +12,19 @@ describe("Order", () => {
     expect(order.totalPence).toBe(0);
   });
 
-  it(`should return ${singleBookPriceInPence} given one item`, () => {
-    order.addItem({ sku: "1" });
-    expect(order.totalPence).toBe(singleBookPriceInPence);
-  });
+  it.each([
+    [800, 1],
+    [1600, 2],
+    [2400, 3],
+    [3200, 4],
+    [4000, 5],
+  ])(
+    "should return %p given %p item(s) with the same sku",
+    (expectedTotalPence: number, qty: number) => {
+      for (let i = 1; i <= qty; i++) {
+        order.addItem({ sku: "1" });
+      }
+      expect(order.totalPence).toBe(expectedTotalPence);
+    }
+  );
 });
