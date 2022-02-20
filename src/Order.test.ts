@@ -48,4 +48,13 @@ describe("Order", () => {
     order.addItem({ sku: "4" });
     expect(order.totalPence).toBe(4 * singleBookPriceInPence * 0.8);
   });
+
+  it("should apply a 25% discount for 5 different items", () => {
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "3" });
+    order.addItem({ sku: "4" });
+    order.addItem({ sku: "5" });
+    expect(order.totalPence).toBe(5 * singleBookPriceInPence * 0.75);
+  });
 });
