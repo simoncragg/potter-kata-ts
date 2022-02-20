@@ -21,7 +21,7 @@ describe("Order", () => {
   ])(
     "should return %p given %p item(s) with the same sku",
     (expectedTotalPence: number, qty: number) => {
-      for (let i = 1; i <= qty; i++) {
+      for (let i = 0; i < qty; i++) {
         order.addItem({ sku: "1" });
       }
       expect(order.totalPence).toBe(expectedTotalPence);
