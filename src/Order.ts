@@ -1,28 +1,38 @@
 import { singleBookPriceInPence } from "./Constants";
 
 export class Order {
-  private items = Array<Item>();
+  private qtyBySku = new Map<string, number>();
 
   addItem(item: Item) {
-    this.items.push(item);
+    let qty = this.qtyBySku.get(item.sku) || 0;
+    this.qtyBySku.set(item.sku, qty + 1);
   }
+
   get totalPence(): number {
-    return (
-      this.numberOfDistinctItems *
-        singleBookPriceInPence *
-        (1 - this.discount) +
-      (this.items.length - this.numberOfDistinctItems) * singleBookPriceInPence
-    );
+    let total = 0;
+    const remainingQtyBySku = new Map(this.qtyBySku);
+
+    while (this.getNumberOfItems(remainingQtyBySku) > 0) {
+      const numDistinctItems = remainingQtyBySku.size;
+      const discount = this.getDiscount(numDistinctItems);
+      if (numDistinctItems > 1) {
+        total += numDistinctItems * singleBookPriceInPence * (1 - discount);
+      } else {
+        total += singleBookPriceInPence;
+      }
+
+      this.removeOneOfEachSku(remainingQtyBySku);
+    }
+
+    return total;
   }
 
-  private get numberOfDistinctItems(): number {
-    return this.items
-      .map((item) => item.sku)
-      .filter((item, i, self) => self.indexOf(item) === i).length;
+  private getNumberOfItems(qtyBySku: Map<string, number>): number {
+    return Array.from(qtyBySku.values()).reduce((acc, curr) => acc + curr, 0);
   }
 
-  private get discount(): number {
-    switch (this.numberOfDistinctItems) {
+  private getDiscount(numberOfDistinctItems: number): number {
+    switch (numberOfDistinctItems) {
       case 2:
         return 0.05;
       case 3:
@@ -33,6 +43,17 @@ export class Order {
         return 0.25;
       default:
         return 0;
+    }
+  }
+
+  removeOneOfEachSku(remainingQtyBySku: Map<string, number>) {
+    for (let sku of remainingQtyBySku.keys()) {
+      const qty = remainingQtyBySku.get(sku)!;
+      if (qty === 1) {
+        remainingQtyBySku.delete(sku);
+      } else {
+        remainingQtyBySku.set(sku, qty - 1);
+      }
     }
   }
 }

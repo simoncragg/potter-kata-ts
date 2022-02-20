@@ -81,4 +81,89 @@ describe("Order", () => {
       );
     }
   );
+
+  it("should apply a 5% discount twice for 2 sets of 2 different skus", () => {
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    expect(order.totalPence).toBe(2 * 2 * singleBookPriceInPence * 0.95);
+  });
+
+  it("should apply a 10% discount for the set of 3 and then 5% for the set of 2", () => {
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "3" });
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    expect(order.totalPence).toBe(
+      3 * singleBookPriceInPence * 0.9 + 2 * singleBookPriceInPence * 0.95
+    );
+  });
+
+  it("should apply a 20% discount for the set of 4, then 10% for the set of 3 and finally 5% for the remaining set of 2", () => {
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "3" });
+    order.addItem({ sku: "4" });
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "3" });
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    expect(order.totalPence).toBe(
+      4 * singleBookPriceInPence * 0.8 +
+        3 * singleBookPriceInPence * 0.9 +
+        2 * singleBookPriceInPence * 0.95
+    );
+  });
+
+  it("should apply a 25% discount for the set of 5, then 20% for the set of 4, then 10% for the set of 3 and finally 5% for the remaining set of 2", () => {
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "3" });
+    order.addItem({ sku: "4" });
+    order.addItem({ sku: "5" });
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "3" });
+    order.addItem({ sku: "4" });
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "3" });
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    expect(order.totalPence).toBe(
+      5 * singleBookPriceInPence * 0.75 +
+        4 * singleBookPriceInPence * 0.8 +
+        3 * singleBookPriceInPence * 0.9 +
+        2 * singleBookPriceInPence * 0.95
+    );
+  });
+
+  it("should apply a 25% discount for the set of 5, then 20% for the set of 4, then 10% for the set of 3, then 5% for the set of 2 and finally use the standard price for the remaining duplicate skus", () => {
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "3" });
+    order.addItem({ sku: "4" });
+    order.addItem({ sku: "5" });
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "3" });
+    order.addItem({ sku: "4" });
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "3" });
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "2" });
+    expect(order.totalPence).toBe(
+      5 * singleBookPriceInPence * 0.75 +
+        4 * singleBookPriceInPence * 0.8 +
+        3 * singleBookPriceInPence * 0.9 +
+        2 * singleBookPriceInPence * 0.95 +
+        2 * singleBookPriceInPence
+    );
+  });
 });
