@@ -28,20 +28,20 @@ describe("Order", () => {
     }
   );
 
-  it("should apply a 5% discount for 2 different items", () => {
+  it("should apply a 5% discount for 2 different skus", () => {
     order.addItem({ sku: "1" });
     order.addItem({ sku: "2" });
     expect(order.totalPence).toBe(2 * singleBookPriceInPence * 0.95);
   });
 
-  it("should apply a 10% discount for 3 different items", () => {
+  it("should apply a 10% discount for 3 different skus", () => {
     order.addItem({ sku: "1" });
     order.addItem({ sku: "2" });
     order.addItem({ sku: "3" });
     expect(order.totalPence).toBe(3 * singleBookPriceInPence * 0.9);
   });
 
-  it("should apply a 20% discount for 4 different items", () => {
+  it("should apply a 20% discount for 4 different skus", () => {
     order.addItem({ sku: "1" });
     order.addItem({ sku: "2" });
     order.addItem({ sku: "3" });
@@ -49,7 +49,7 @@ describe("Order", () => {
     expect(order.totalPence).toBe(4 * singleBookPriceInPence * 0.8);
   });
 
-  it("should apply a 25% discount for 5 different items", () => {
+  it("should apply a 25% discount for 5 different skus", () => {
     order.addItem({ sku: "1" });
     order.addItem({ sku: "2" });
     order.addItem({ sku: "3" });
