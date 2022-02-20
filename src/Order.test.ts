@@ -33,4 +33,11 @@ describe("Order", () => {
     order.addItem({ sku: "2" });
     expect(order.totalPence).toBe(2 * singleBookPriceInPence * 0.95);
   });
+
+  it("should apply a 10% discount for 3 different items", () => {
+    order.addItem({ sku: "1" });
+    order.addItem({ sku: "2" });
+    order.addItem({ sku: "3" });
+    expect(order.totalPence).toBe(3 * singleBookPriceInPence * 0.9);
+  });
 });

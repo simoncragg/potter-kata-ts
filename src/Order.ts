@@ -15,9 +15,13 @@ export class Order {
       .map((item) => item.sku)
       .filter((item, i, self) => self.indexOf(item) === i);
 
-    if (distinctItems.length === 2) {
-      return 0.05;
+    switch (distinctItems.length) {
+      case 2:
+        return 0.05;
+      case 3:
+        return 0.1;
+      default:
+        return 0;
     }
-    return 0;
   }
 }
